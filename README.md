@@ -14,14 +14,34 @@ Sometimes it is useful to test from a console when it is against a standard api,
 F.x. 
 ```
 #!C#
-ConsoleTest.AddTest("DirectoryHelper", "Test validate local directory.", () => TestValidateDirectory());
+ConsoleTest.AddTest("DirectoryHelper", "Test validate local directory."
+, () => TestValidateDirectory());
 
 ```
 The "TestValidateDirectory()" method is assumed to be a static method reachable from the console.
 
 ** Use ConsoleTest.GetNextInput(string inputRequest) to request input from the user ending with use of Enter. inputRequest is the test written immidiate before the input. The method returns the string that the user have entered before the Enter.
+Fx.
+
+```
+#!C#
+
+ConsoleTest.GetNextInput("Press Enter to clean up test");
+
+```
+
 
 ** Use ConsoleTest.GetNextInput(string inputRequest, string defaultValue) to request input from the user ending with use of Enter. inputRequest is the test written immidiate before the input. defaultValue is written as the suggestion for the input and is written as simulated keyboard input so if the user is just pressing Enter  the defaultvalue will be returned as string and if the user modifies the default value and hit Enter the modifies value will be returned as string. The method returns the string that the user have entered before the Enter.
+Fx.
+
+```
+#!C#
+
+string subDirectoryString = 
+ConsoleTest.GetNextInput("Enter sub dircetory to test. End with Enter: ", "test");
+```
+
+
 
 ** Use ConsoleTest.Run() to start running the console interface. First select the test group and then the the individual tests.
 
