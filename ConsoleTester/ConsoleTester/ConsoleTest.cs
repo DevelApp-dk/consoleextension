@@ -16,7 +16,7 @@ namespace ConsoleTester
                 Console.Clear();
                 if (string.IsNullOrWhiteSpace(selectedGroupName))
                 {
-                    Console.WriteLine("Use: Select a test group to run of the following by entering number and hit Enter.");
+                    Console.WriteLine("Use: Select a action group by entering number and hit Enter.");
                     Console.WriteLine("0) Exit");
                     Dictionary<string, string> selectionList = new Dictionary<string, string>();
                     int counter = 1;
@@ -49,7 +49,7 @@ namespace ConsoleTester
                     }
                     else
                     {
-                        Console.WriteLine("Use: Select a test to run of the following by entering number and hit Enter.");
+                        Console.WriteLine("Use: Select an action by entering number and hit Enter.");
                         Console.WriteLine("0) Return to previous list.");
                         foreach (Test test in testGroup.Values)
                         {
@@ -85,6 +85,11 @@ namespace ConsoleTester
                     }
                 }
             }
+        }
+
+        public static bool RunCommandLine(string[] args)
+        {
+
         }
 
         public static string GetNextInput(string inputRequest)
