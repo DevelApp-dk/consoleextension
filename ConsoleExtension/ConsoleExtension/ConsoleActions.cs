@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using WindowsInput;
 
-namespace ConsoleTester
+namespace ConsoleExtension
 {
-    public static class ConsoleTest
+    public static class ConsoleActions
     {
         public static void Run()
         {
@@ -20,7 +19,7 @@ namespace ConsoleTester
                     Console.WriteLine("0) Exit");
                     Dictionary<string, string> selectionList = new Dictionary<string, string>();
                     int counter = 1;
-                    foreach (string groupName in TestGroupsToRun.Keys)
+                    foreach (string groupName in ActionGroupsToRun.Keys)
                     {
                         selectionList.Add(counter.ToString(), groupName);
                         Console.WriteLine(counter.ToString() + ") " + groupName);
@@ -41,8 +40,8 @@ namespace ConsoleTester
                 }
                 else
                 {
-                    Dictionary<string, Test> testGroup;
-                    if (!TestGroupsToRun.TryGetValue(selectedGroupName, out testGroup))
+                    Dictionary<string, ConsoleAction> testGroup;
+                    if (!ActionGroupsToRun.TryGetValue(selectedGroupName, out testGroup))
                     {
                         GetNextInput(string.Format("Could not get {0}. Returning to group selection. Press Enter to procede.", selectedGroupName));
                         selectedGroupName = null;
@@ -51,9 +50,9 @@ namespace ConsoleTester
                     {
                         Console.WriteLine("Use: Select an action by entering number and hit Enter.");
                         Console.WriteLine("0) Return to previous list.");
-                        foreach (Test test in testGroup.Values)
+                        foreach (ConsoleAction test in testGroup.Values)
                         {
-                            Console.WriteLine(test.ListNumber.ToString() + ") " + test.Explanation);
+                            Console.WriteLine(test.ListNumber.ToString() + ") " + test.ActionExplanation);
                         }
                         inputLine = Console.ReadLine();
                         if (inputLine.Equals("0"))
@@ -62,12 +61,12 @@ namespace ConsoleTester
                         }
                         else
                         {
-                            Test test = null;
+                            ConsoleAction test = null;
                             if (testGroup.TryGetValue(inputLine, out test))
                             {
                                 try
                                 {
-                                    test.TestToRun.Invoke();
+                                    test.ActionToRun.Invoke();
                                 }
                                 catch (Exception ex)
                                 {
@@ -87,11 +86,6 @@ namespace ConsoleTester
             }
         }
 
-        public static bool RunCommandLine(string[] args)
-        {
-
-        }
-
         public static string GetNextInput(string inputRequest)
         {
             return GetNextInput(inputRequest, null);
@@ -106,7 +100,7 @@ namespace ConsoleTester
             }
             if (defaultValue != null)
             {
-                InputSimulator.SimulateTextEntry(defaultValue);
+                KeyboardTextInput.TextInput(defaultValue);
             }
             string capturedString = Console.ReadLine();
             Console.WriteLine(string.Format("Captured: {0}", capturedString));
@@ -114,34 +108,34 @@ namespace ConsoleTester
             return capturedString;
         }
 
-        static Dictionary<string, Dictionary<string, Test>> _testsToRun = new Dictionary<string, Dictionary<string, Test>>();
+        static Dictionary<string, Dictionary<string, ConsoleAction>> _actionsToRun = new Dictionary<string, Dictionary<string, ConsoleAction>>();
 
-        private static int NewTestNumber(string groupName)
+        private static int NewActionNumber(string groupName)
         {
-            return TestsToRun(groupName).Count + 1;
+            return ActionsToRun(groupName).Count + 1;
         }
-        public static void AddTest(string groupName, string explanation, Action testToRun)
+        public static void AddAction(string groupName, string actionExplanation, Action testToRun)
         {
-            Test test = new Test(NewTestNumber(groupName), explanation, testToRun);
-            TestsToRun(groupName).Add(test.ListNumber.ToString(), test);
+            ConsoleAction test = new ConsoleAction(NewActionNumber(groupName), actionExplanation, testToRun);
+            ActionsToRun(groupName).Add(test.ListNumber.ToString(), test);
         }
 
-        private static Dictionary<string, Dictionary<string, Test>> TestGroupsToRun
+        private static Dictionary<string, Dictionary<string, ConsoleAction>> ActionGroupsToRun
         {
             get
             {
-                return _testsToRun;
+                return _actionsToRun;
             }
         }
 
-        private static Dictionary<string, Test> TestsToRun(string groupName)
+        private static Dictionary<string, ConsoleAction> ActionsToRun(string groupName)
         {
-            Dictionary<string, Test> testsToRun;
-            if (TestGroupsToRun.ContainsKey(groupName))
+            Dictionary<string, ConsoleAction> actionsToRun;
+            if (ActionGroupsToRun.ContainsKey(groupName))
             {
-                if (TestGroupsToRun.TryGetValue(groupName, out testsToRun))
+                if (ActionGroupsToRun.TryGetValue(groupName, out actionsToRun))
                 {
-                    return testsToRun;
+                    return actionsToRun;
                 }
                 else
                 {
@@ -150,26 +144,26 @@ namespace ConsoleTester
             }
             else
             {
-                testsToRun = new Dictionary<string, Test>();
-                TestGroupsToRun.Add(groupName, testsToRun);
-                return testsToRun;
+                actionsToRun = new Dictionary<string, ConsoleAction>();
+                ActionGroupsToRun.Add(groupName, actionsToRun);
+                return actionsToRun;
             }
         }
 
-        private class Test
+        private class ConsoleAction
         {
-            public Test(int listNumber, string explanation, Action testToRun)
+            public ConsoleAction(int listNumber, string actionExplanation, Action actionToRun)
             {
                 ListNumber = listNumber;
-                Explanation = explanation;
-                TestToRun = testToRun;
+                ActionExplanation = actionExplanation;
+                ActionToRun = actionToRun;
             }
 
             public int ListNumber { get; private set; }
 
-            public string Explanation { get; private set; }
+            public string ActionExplanation { get; private set; }
 
-            public Action TestToRun { get; private set; }
+            public Action ActionToRun { get; private set; }
         }
 
     }
