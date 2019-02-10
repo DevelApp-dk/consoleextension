@@ -1,10 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using System.Windows.Forms;
 
 namespace ConsoleExtension
 {
     public static class ConsoleActions
     {
+        private static bool _debug;
+
+        public static void RunDebug()
+        {
+            _debug = true;
+            Run();
+        }
+
         public static void Run()
         {
             string inputLine = string.Empty;
@@ -93,19 +103,43 @@ namespace ConsoleExtension
 
         public static string GetNextInput(string inputRequest, string defaultValue)
         {
-            Console.WriteLine();
             if (inputRequest != null)
             {
                 Console.Write(inputRequest);
             }
-            if (defaultValue != null)
+            if (!string.IsNullOrEmpty(defaultValue))
             {
-                KeyboardTextInput.TextInput(defaultValue);
+                sendInputToKeyboard(defaultValue);
             }
             string capturedString = Console.ReadLine();
-            Console.WriteLine(string.Format("Captured: {0}", capturedString));
-
+            if (_debug)
+            {
+                Console.WriteLine(string.Format("Captured: {0}", capturedString));
+            }
             return capturedString;
+        }
+
+        private static void sendInputToKeyboard(string defaultValue)
+        {
+            int chunkSize = 40;// SendKeys.SendWait has a limit on what can be sent
+            int stringLength = defaultValue.Length;
+            for (int chunkCounter = 0; chunkCounter < stringLength; chunkCounter += chunkSize)
+            {
+                if (chunkCounter + chunkSize > stringLength)
+                {
+                    chunkSize = stringLength - chunkCounter;
+                }
+                SendKeys.SendWait(prepareSendKeysInput(defaultValue.Substring(chunkCounter, chunkSize)));
+            }
+        }
+
+        private static string prepareSendKeysInput(string inputToPrepare)
+        {
+            string strRegex = @"(?<reserverdchar>[+^%~{}\[\]\(\)])";
+            Regex myRegex = new Regex(strRegex, RegexOptions.CultureInvariant);
+            string strReplace = @"{${reserverdchar}}";
+
+            return myRegex.Replace(inputToPrepare, strReplace);
         }
 
         static Dictionary<string, Dictionary<string, ConsoleAction>> _actionsToRun = new Dictionary<string, Dictionary<string, ConsoleAction>>();
