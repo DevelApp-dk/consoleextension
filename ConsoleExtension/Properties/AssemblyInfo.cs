@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("ConsoleExtension")]
 [assembly: AssemblyDescription("Use is for console actions when f.x. Unit Testing is not possible or makes no sense.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Applied-Intelligence Denmark (CVR 36442611)")]
+[assembly: AssemblyCompany("DevelApp Denmark (CVR 33211740)")]
 [assembly: AssemblyProduct("ConsoleExtension")]
-[assembly: AssemblyCopyright("Copyright © 2016-2017")]
+[assembly: AssemblyCopyright("Copyright © 2016-2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.2.0.0")]
-[assembly: AssemblyFileVersion("0.2.0.0")]
+[assembly: AssemblyVersion("0.2.1.0")]
+[assembly: AssemblyFileVersion("0.2.1.0")]
